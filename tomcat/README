@@ -1,0 +1,14 @@
+
+This script will monitor a Tomcat server by parsing the Tomcat Manager
+status page.  The script loops every 30 seconds.  The information it
+prints are:
+
+ * How much memory Tomcat is using versus how much it can use
+ * For every listener, the number of worker threads that are not idle
+   or in keepalive, versus the maximum number it can allocate
+ * Number of requests in last 30 sec period, and average processing
+   time for a request
+ * Which URI are being served at the time
+
+The script will save this information on daily "rolling" files, one for
+status and one for URIs.
