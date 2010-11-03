@@ -1,0 +1,12 @@
+
+This monitor is meant to help solve blocking problems in SQL Servers.
+For background see
+
+* http://support.microsoft.com/kb/224453
+* http://www.informit.com/articles/article.aspx?p=26949
+
+You will need to install in SQL Server the stored procedure you will
+find in this article: http://support.microsoft.com/kb/271509/
+
+The Ruby script in this directory calls the stored procedure at 30
+seconds intervals and saves the output in separate files.
