@@ -99,7 +99,7 @@ def find_connectors
   find_by_xpath("/status/connector").map do |element|
     name = element.attributes["name"]
     this_connector = "/status/connector[@name='#{name}']"
-    current_threads_busy = find_by_xpath("#{this_connector}/workers/worker[@stage!='K']").size
+    current_threads_busy = find_by_xpath("#{this_connector}/workers/worker[@stage!='K' and @stage!='R']").size
     max_threads = find_attribute_by_xpath("#{this_connector}/threadInfo", "maxThreads")
     processing_time = find_attribute_by_xpath("#{this_connector}/requestInfo", "processingTime")
     request_count = find_attribute_by_xpath("#{this_connector}/requestInfo", "requestCount")
@@ -141,11 +141,24 @@ def save_to_rolling_file tag, text
   end
 end
 
+def protect
+  while true
+    begin
+      yield
+    rescue Exception => e
+      puts e.to_s
+      sleep 5
+    end
+  end
+end
+
 parse_command_line
-while true
-  parse_xml(get_status)
-  save_to_rolling_file "tomcat-status", status_line    
-  save_to_rolling_file "tomcat-open-uris", add_time_stamp(working_url_list)
-  sleep 30
+protect do
+  while true
+    parse_xml(get_status)
+    save_to_rolling_file "tomcat-status", status_line    
+    save_to_rolling_file "tomcat-open-uris", add_time_stamp(working_url_list)
+    sleep 10
+  end
 end
 
